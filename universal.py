@@ -30,12 +30,17 @@ class ObfuscationOptionsMenu(tkinter.Frame):
 
 		self.AZTUP = tkinter.BooleanVar()
 		tkinter.Checkbutton(self, text='AztupBrew', var=self.AZTUP).pack(anchor=tkinter.W)
+
+		self.BEAUTIFY = tkinter.BooleanVar()
+		tkinter.Checkbutton(self, text='Beautify', var=self.BEAUTIFY).pack(anchor=tkinter.W)
 	
 	def get_options_state(self):
 		if self.PSU.get() == True:
 			return "PSU"
 		elif self.AZTUP.get() == True:
 			return "AZTUP"
+		elif self.BEAUTIFY.get() == True:
+			return "BEAU"
 		else:
 			return False
 
@@ -93,10 +98,10 @@ class TextFieldActions():
 	
 	async def obfuscate(self):
 		choose = self.options_menu.get_options_state()
-		if choose == "AZTUP" or choose == "PSU":
+		if choose == "AZTUP" or choose == "PSU" or choose == "BEAU":
 			if "Made by GameOverAgain" in self.text_field.get_text():
 				mb.showwarning("Hai","Please paste smth lol")
-			elif choose == "AZTUP" or choose == "PSU":
+			elif choose == "AZTUP" or choose == "PSU" or choose == "BEAU":
 				text = self.text_field.get_text()
 				f1=open('beau/1.lua','w')
 				f1.write(text)
@@ -135,7 +140,8 @@ class TextFieldActions():
 								self.text_field.set_text(responsedata['Errors'])
 							except:
 								pass
-
+				elif choose == "BEAU":
+					self.text_field.set_text(data)
 		elif choose == False:
 			mb.showwarning("Made by GameOverAgain","Please choose obfuscator")
 	
