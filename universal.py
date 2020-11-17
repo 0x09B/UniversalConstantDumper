@@ -33,6 +33,9 @@ class ObfuscationOptionsMenu(tkinter.Frame):
 
 		self.BEAUTIFY = tkinter.BooleanVar()
 		tkinter.Checkbutton(self, text='Beautify', var=self.BEAUTIFY).pack(anchor=tkinter.W)
+
+		self.RUNCODE = tkinter.BooleanVar()
+		tkinter.Checkbutton(self, text='Run on LUA', var=self.RUNCODE).pack(anchor=tkinter.W)
 	
 	def get_options_state(self):
 		if self.PSU.get() == True:
@@ -41,6 +44,8 @@ class ObfuscationOptionsMenu(tkinter.Frame):
 			return "AZTUP"
 		elif self.BEAUTIFY.get() == True:
 			return "BEAU"
+		elif self.RUNCODE.get() == True:
+			return "RUNCODE"
 		else:
 			return False
 
@@ -75,7 +80,7 @@ class TextFieldButtons(tkinter.Frame):
 		super().__init__(parent)
 
 		self.pack(side=tkinter.BOTTOM, anchor=tkinter.W)
-		tkinter.Button(self, command=text_field_actions.obfuscate_init,text='Dump').pack(side='left')
+		tkinter.Button(self, command=text_field_actions.obfuscate_init,text='Run').pack(side='left')
 		tkinter.Button(self, text='Open file', command=text_field_actions.open_file).pack(side='left')
 		tkinter.Button(self, text='Clear text', command=text_field_actions.clear_text).pack(side='left')
 		tkinter.Button(self, text='Copy text', command=text_field_actions.copy_text).pack(side='left')
@@ -98,10 +103,10 @@ class TextFieldActions():
 	
 	async def obfuscate(self):
 		choose = self.options_menu.get_options_state()
-		if choose == "AZTUP" or choose == "PSU" or choose == "BEAU":
+		if choose == "AZTUP" or choose == "PSU" or choose == "BEAU" or choose == "RUNCODE":
 			if "Made by GameOverAgain" in self.text_field.get_text():
 				mb.showwarning("Hai","Please paste smth lol")
-			elif choose == "AZTUP" or choose == "PSU" or choose == "BEAU":
+			elif choose == "AZTUP" or choose == "PSU" or choose == "BEAU" or choose == "RUNCODE":
 				text = self.text_field.get_text()
 				f1=open('beau/1.lua','w')
 				f1.write(text)
@@ -111,7 +116,7 @@ class TextFieldActions():
 				data = fin.read()
 				fin.close()
 				if choose == "AZTUP":
-					replacething = re.sub(r"(return)(\s*\w\(\w\));",rf'print(\2)', data)
+					replacething = re.sub(r"(return)(\s*\w\(\w\));?",rf'print(\2)', data)
 					apidata = requests.post("https://rextester.com/rundotnet/api",data={'LanguageChoice': 14,'Program':replacething,'Input':'','CompilerArgs':''})
 					responsedata = json.loads(apidata.text)
 					try:
@@ -142,6 +147,20 @@ class TextFieldActions():
 								pass
 				elif choose == "BEAU":
 					self.text_field.set_text(data)
+				elif choose == "RUNCODE":
+					apidata = requests.post("https://rextester.com/rundotnet/api",data={'LanguageChoice': 14,'Program':text,'Input':'','CompilerArgs':''})
+					responsedata = json.loads(apidata.text)
+					try:
+						self.text_field.set_text(responsedata["Result"])
+					except:
+						try:
+							self.text_field.set_text(responsedata['Warnings'])
+						except:
+							try:
+								self.text_field.set_text(responsedata['Errors'])
+							except:
+								pass
+
 		elif choose == False:
 			mb.showwarning("Made by GameOverAgain","Please choose obfuscator")
 	
