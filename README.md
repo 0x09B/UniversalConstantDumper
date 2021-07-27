@@ -1,4 +1,4 @@
-# Universal Constant Dumper
+# This shit is outdated.
 
 Okay, im writing this for my future self. <br /> 
 We use in python `regex` function <br /> 
