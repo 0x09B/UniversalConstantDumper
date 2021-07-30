@@ -1,4 +1,4 @@
-# This is outdated.
+# This is v1.0 and outdated.
 
 Okay, im writing this for my future self. <br /> 
 We use in python `regex` function <br /> 
